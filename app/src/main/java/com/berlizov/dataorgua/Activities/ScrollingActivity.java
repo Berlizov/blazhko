@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.berlizov.dataorgua.Info;
 import com.berlizov.dataorgua.JSONTable;
 import com.berlizov.dataorgua.R;
+import com.berlizov.dataorgua.tabs.GraphTab;
 import com.berlizov.dataorgua.tabs.MapTab;
 import com.berlizov.dataorgua.tabs.TableReaderFragment;
 import com.berlizov.dataorgua.tabs.TableTab;
@@ -41,7 +42,10 @@ public class ScrollingActivity extends AppCompatActivity {
     * Типо сюда дабавляем новые табы если разработали
     */
     enum Tab {
-        TableTab(new TableTab()),MapTab(new MapTab());
+        TableTab(new TableTab()),
+        MapTab(new MapTab()),
+        GraphTab(new GraphTab());
+
         TableReaderFragment tab;
         Tab(TableReaderFragment tab){
             this.tab=tab;
@@ -192,7 +196,7 @@ public class ScrollingActivity extends AppCompatActivity {
             }
 
             //Code
-            // изза криворукости этих сервисов, мы на выход получали строку с  \u**** ,где * - цифра, вместо кириллических букв. там типо криво приброзовывали utf-8 
+            // изза криворукости этих сервисов, мы на выход получали строку с  \\u**** ,где * - цифра, вместо кириллических букв. там типо криво приброзовывали utf-8
             // написал транслятор
             // на выход получам норм строку json
             StringBuilder out = new StringBuilder();

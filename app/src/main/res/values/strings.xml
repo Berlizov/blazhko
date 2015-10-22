@@ -3,4 +3,5 @@
     <string name="info_id">InfoID</string>
     <string name="map_tab">Карта</string>
     <string name="table_tab">Таблица</string>
+    <string name="graph_tab">Графика</string>
 </resources>

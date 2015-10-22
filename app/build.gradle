@@ -27,4 +27,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.1.0'
     compile 'de.codecrafters.tableview:tableview:0.9.5'
     compile "org.json:json:20150729"
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
 }
