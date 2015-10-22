@@ -3,11 +3,14 @@ package com.berlizov.dataorgua.graph;
 import android.graphics.Color;
 
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,16 @@ import java.util.List;
  */
 public class PieChart extends AChart<com.github.mikephil.charting.charts.PieChart> {
 
+
+    @Override
+    public void setChartView(com.github.mikephil.charting.charts.PieChart view) {
+        super.setChartView(view);
+
+        mView.setDrawHoleEnabled(false);
+        Legend l = mView.getLegend();
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+    }
+
     @Override
     public void updateRowAndColumn(int row, int column) {
         ArrayList<String> xValues = new ArrayList<String>();
@@ -25,7 +38,11 @@ public class PieChart extends AChart<com.github.mikephil.charting.charts.PieChar
         for (List<String> tableRow : mTable.getRows()) {
             try {
                 yValues.add(new Entry(Float.parseFloat(tableRow.get(column).replace(",", ".")), i++));
-                xValues.add(tableRow.get(row));
+                String value = tableRow.get(row);
+                if(value.length() > 25) {
+                    value = value.substring(0, 22) + "...";
+                }
+                xValues.add(value);
             } catch (NumberFormatException e) {
 
             }
@@ -63,12 +80,9 @@ public class PieChart extends AChart<com.github.mikephil.charting.charts.PieChar
         dataSet.setColors(colors);
 
         PieData data = new PieData(xValues, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextColor(Color.BLACK);
 
-        mView.setDrawHoleEnabled(false);
-        Legend l = mView.getLegend();
-        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+        //data.setValueFormatter(new PercentFormatter());
+        data.setValueTextColor(Color.BLACK);
 
         mView.setData(data);
         mView.notifyDataSetChanged();

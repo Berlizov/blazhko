@@ -15,7 +15,8 @@
             android:text="@string/row"
             android:id="@+id/textView"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"/>
 
         <Spinner
             android:layout_width="wrap_content"
@@ -31,15 +32,16 @@
             android:text="@string/column"
             android:id="@+id/textView2"
             android:layout_below="@+id/row"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp" />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/column"
-            android:layout_alignTop="@+id/textView2"
             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/textView2" />
+            android:layout_toRightOf="@+id/textView2"
+            android:layout_below="@+id/row" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,15 +49,16 @@
             android:text="@string/chart_type"
             android:id="@+id/textView3"
             android:layout_below="@+id/column"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp" />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/chart_type"
-            android:layout_below="@+id/column"
             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/textView3" />
+            android:layout_toRightOf="@+id/textView3"
+            android:layout_below="@+id/column" />
     </RelativeLayout>
 
     <com.github.mikephil.charting.charts.HorizontalBarChart

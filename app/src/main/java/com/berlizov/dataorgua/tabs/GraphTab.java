@@ -75,7 +75,8 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
 
         mHeadersAdapter = new ArrayAdapter<CharSequence>(
                 view.getContext(),
-                android.R.layout.simple_spinner_item
+                R.layout.spinner_item,
+                R.id.text
         );
 
         Spinner row = (Spinner) view.findViewById(R.id.row);
@@ -88,7 +89,8 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
 
         ArrayAdapter<String> chartAdapter = new ArrayAdapter<String>(
                 view.getContext(),
-                android.R.layout.simple_spinner_item
+                R.layout.spinner_item,
+                R.id.text
         );
         for(Chart chart : Chart.values()) {
             chartAdapter.add(chart.getName());
