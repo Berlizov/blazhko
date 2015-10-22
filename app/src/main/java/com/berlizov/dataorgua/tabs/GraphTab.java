@@ -1,95 +1,58 @@
 package com.berlizov.dataorgua.tabs;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.berlizov.dataorgua.JSONTable;
 import com.berlizov.dataorgua.R;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.berlizov.dataorgua.graph.AChart;
+import com.berlizov.dataorgua.graph.HorizontalBarChart;
 
 /**
  * Created by Viktor Hapiak on 21.10.2015.
  */
-public class GraphTab extends TableReaderFragment {
+public class GraphTab extends TableReaderFragment implements AdapterView.OnItemSelectedListener {
 
-    HorizontalBarChart barChart;
-    PieChart pieChart;
+    private enum Chart {
+        BAR("Гистограмма", new HorizontalBarChart()),
+        /*PIE("Круговая", null)*/;
+
+        Chart(String name, AChart chart) {
+            mName = name;
+            mChart = chart;
+        }
+
+        private String mName;
+        private AChart mChart;
+
+        public String getName() {
+            return mName;
+        }
+
+        public AChart getChart() {
+            return mChart;
+        }
+    }
+
+    private AChart mCurrentChart = Chart.BAR.getChart();
+    private ArrayAdapter<CharSequence> mHeadersAdapter;
+    private int mSelectedRow, mSelectedColumn;
 
     @Override
     public void setTable(JSONTable table) {
-        ArrayList<String> xVals = new ArrayList<String>();
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-        int i = 0;
-        for (List<String> row : table.getRows()) {
-            try {
-                yVals1.add(new Entry(Float.parseFloat(row.get(1).replace(",", ".")), i++));
-                xVals.add(row.get(0));
-            } catch (NumberFormatException e) {
-
-            }
+        for(Chart chart : Chart.values()) {
+            chart.getChart().setData(table);
         }
 
-        PieDataSet dataSet = new PieDataSet(yVals1, "Palyvo");
-        dataSet.setSliceSpace(2f);
-        dataSet.setSelectionShift(5f);
-
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-
-        colors.add(ColorTemplate.getHoloBlue());
-
-        dataSet.setColors(colors);
-
-        PieData data = new PieData(xVals, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextColor(Color.BLACK);
-        pieChart.setData(data);
-
-        pieChart.setDrawHoleEnabled(false);
-        Legend l = pieChart.getLegend();
-        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
-
-        //BarDataSet set1 = new BarDataSet(yVals1, "Palyvo");
-        //set1.setBarSpacePercent(35f);
-
-        //ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
-        //dataSets.add(set1);
-
-        //BarData data = new BarData(xVals, dataSets);
-
-        //barChart.setData(data);
-        //barChart.invalidate();
+        for(String column : table.getHeaders()) {
+            mHeadersAdapter.add(column);
+        }
+        mHeadersAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -105,8 +68,57 @@ public class GraphTab extends TableReaderFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.graph_tab, container, false);
-        //barChart = (HorizontalBarChart) view.findViewById(R.id.chart);
-        pieChart = (PieChart) view.findViewById(R.id.chart);
+
+        Chart.BAR.getChart().setChartView(view.findViewById(R.id.bar_chart));
+        //Chart.PIE.getChart().setChartView(view.findViewById(R.id.pie_chart));
+
+        mHeadersAdapter = new ArrayAdapter<CharSequence>(
+                view.getContext(),
+                android.R.layout.simple_spinner_item
+        );
+
+        Spinner row = (Spinner) view.findViewById(R.id.row);
+        row.setAdapter(mHeadersAdapter);
+        row.setOnItemSelectedListener(this);
+
+        Spinner column = (Spinner) view.findViewById(R.id.column);
+        column.setAdapter(mHeadersAdapter);
+        column.setOnItemSelectedListener(this);
+
+        ArrayAdapter<String> chartAdapter = new ArrayAdapter<String>(
+                view.getContext(),
+                android.R.layout.simple_spinner_item
+        );
+        for(Chart chart : Chart.values()) {
+            chartAdapter.add(chart.getName());
+        }
+
+        Spinner chart = (Spinner) view.findViewById(R.id.chart_type);
+        chart.setAdapter(chartAdapter);
+        chart.setOnItemSelectedListener(this);
         return view;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getId()) {
+            case R.id.chart_type:
+                mCurrentChart.setVisible(false);
+                mCurrentChart = Chart.values()[position].getChart();
+                mCurrentChart.setVisible(true);
+                break;
+            case R.id.row:
+                mSelectedRow = (int) id;
+                break;
+            case R.id.column:
+                mSelectedColumn = (int) id;
+                break;
+        }
+        mCurrentChart.updateRowAndColumn(mSelectedRow, mSelectedColumn);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

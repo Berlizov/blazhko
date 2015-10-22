@@ -4,4 +4,8 @@
     <string name="map_tab">Карта</string>
     <string name="table_tab">Таблица</string>
     <string name="graph_tab">Графика</string>
+
+    <string name="row">Строка:</string>
+    <string name="column">Столбец:</string>
+    <string name="chart_type">Тип диаграммы:</string>
 </resources>
