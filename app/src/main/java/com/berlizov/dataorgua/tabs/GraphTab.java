@@ -12,6 +12,7 @@ import com.berlizov.dataorgua.JSONTable;
 import com.berlizov.dataorgua.R;
 import com.berlizov.dataorgua.graph.AChart;
 import com.berlizov.dataorgua.graph.HorizontalBarChart;
+import com.berlizov.dataorgua.graph.PieChart;
 
 /**
  * Created by Viktor Hapiak on 21.10.2015.
@@ -20,7 +21,7 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
 
     private enum Chart {
         BAR("Гистограмма", new HorizontalBarChart()),
-        /*PIE("Круговая", null)*/;
+        PIE("Круговая", new PieChart());
 
         Chart(String name, AChart chart) {
             mName = name;
@@ -70,7 +71,7 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
         View view = inflater.inflate(R.layout.graph_tab, container, false);
 
         Chart.BAR.getChart().setChartView(view.findViewById(R.id.bar_chart));
-        //Chart.PIE.getChart().setChartView(view.findViewById(R.id.pie_chart));
+        Chart.PIE.getChart().setChartView(view.findViewById(R.id.pie_chart));
 
         mHeadersAdapter = new ArrayAdapter<CharSequence>(
                 view.getContext(),
