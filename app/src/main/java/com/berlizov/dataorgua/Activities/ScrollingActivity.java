@@ -38,9 +38,7 @@ import java.util.List;
 
 
 public class ScrollingActivity extends AppCompatActivity {
-    /**
-    * Типо сюда дабавляем новые табы если разработали
-    */
+
     enum Tab {
         TableTab(new TableTab()),
         MapTab(new MapTab()),
@@ -60,9 +58,7 @@ public class ScrollingActivity extends AppCompatActivity {
     ViewPager mViewPager;
     ProgressBar mProgressBar;
     List<TableReaderFragment> mTabs = new ArrayList<>();
-    /**
-    * метод при загр окна
-    */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,15 +69,13 @@ public class ScrollingActivity extends AppCompatActivity {
         new CallAPI(this).execute(mInfo.ID);
     }
 
-    /**
-    * метод выполняеться при загрузке инфы из сети
-    */
     public void loaded(JSONTable str) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         for(Tab t: Tab.values()){
             if(t.getTab().can(str)) {
                 adapter.addFrag(t.getTab(),getString(t.getTab().getIdName()));
                 mTabs.add(t.getTab());
+                t.getTab().setTable(str);
             }
         }
         mViewPager.setAdapter(adapter);
@@ -89,21 +83,13 @@ public class ScrollingActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
         mViewPager.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.INVISIBLE);
-        for(TableReaderFragment tab: mTabs){
-                tab.setTable(str);
-        }
     }
-    /**
-    * метод выполняеться при неудачной загрузке инфы из сети
-    * показываем еррор
-    */
+
     public void setError() {
         mError.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.INVISIBLE);
     }
-    /**
-    * пишем в заголовке окна имя набора данных
-    */
+
     private void setupToolbar(){
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -111,9 +97,7 @@ public class ScrollingActivity extends AppCompatActivity {
         }
         setTitle(mInfo.name);
     }
-    /**
-    * включам крутилку при загрузке
-    */
+
     private void setupViewPager() {
         mError = (TextView) findViewById(R.id.errorInfo);
         mViewPager = (ViewPager) findViewById(R.id.containerInfo);
@@ -122,9 +106,7 @@ public class ScrollingActivity extends AppCompatActivity {
         mError.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
     }
-/**
-* штука для работы табов
-*/
+
     static class ViewPagerAdapter extends FragmentPagerAdapter {
 
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -154,9 +136,7 @@ public class ScrollingActivity extends AppCompatActivity {
             return mFragmentTitleList.size()-1<position?"":mFragmentTitleList.get(position);
         }
     }
-    /**
-    * асинхронная загрузка из сети
-    */
+
     private class CallAPI extends AsyncTask<String, String, JSONTable> {
         ScrollingActivity parent;
 
@@ -164,9 +144,6 @@ public class ScrollingActivity extends AppCompatActivity {
             this.parent = parent;
         }
 
-        /**
-        * сама загрузка
-        */
         @Override
         protected JSONTable doInBackground(String... params) {
             //апи

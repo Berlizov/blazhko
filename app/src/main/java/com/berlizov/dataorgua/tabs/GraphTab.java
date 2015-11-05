@@ -39,16 +39,10 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
             return mChart;
         }
     }
-
-    private JSONTable mTable;
     private AChart mCurrentChart = Chart.BAR.getChart();
     private ArrayAdapter<CharSequence> mHeadersAdapter;
     private int mSelectedRow, mSelectedColumn;
 
-    @Override
-    public void setTable(JSONTable table) {
-        mTable = table;
-    }
 
     @Override
     public boolean can(JSONTable table) {
@@ -61,7 +55,7 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.graph_tab, container, false);
 
         Chart.BAR.getChart().setChartView(view.findViewById(R.id.bar_chart));
@@ -94,8 +88,6 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
         chart.setAdapter(chartAdapter);
         chart.setOnItemSelectedListener(this);
 
-        applyTable();
-
         return view;
     }
 
@@ -122,7 +114,8 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
 
     }
 
-    private void applyTable() {
+    @Override
+    public void applyTable(View view) {
         for(Chart chart : Chart.values()) {
             chart.getChart().setData(mTable);
         }

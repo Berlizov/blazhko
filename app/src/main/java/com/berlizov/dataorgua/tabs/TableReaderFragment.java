@@ -1,26 +1,32 @@
 package com.berlizov.dataorgua.tabs;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.berlizov.dataorgua.JSONTable;
 import com.berlizov.dataorgua.R;
 
-/**
- * Created by 350z6_000 on 18.10.2015.
- * интерфейс наших табов
- */
 public abstract class TableReaderFragment extends Fragment {
-	/**
-	* тут идет вызов установки JSONTable в табу, типо 
-	*/
-    public abstract void setTable(JSONTable table);
-    /**
-    * проверяем нужна ли эта таба для этих данных
-    * табличная таба всегда нужна, а вот таба карты только коглда есть координаты
-    */
+    protected JSONTable mTable;
+
+    public void setTable(JSONTable table){
+            mTable = table;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = createView(inflater, container, savedInstanceState);
+        applyTable(view);
+        return view;
+    }
+
+    public abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+    public abstract void applyTable(View view);
     public abstract boolean can(JSONTable table);
-    /**
-    * тут берем id имени табы для тоборажения заголовка таба, типо ЭКартаЭ
-    */
     public abstract int getIdName();
 }
