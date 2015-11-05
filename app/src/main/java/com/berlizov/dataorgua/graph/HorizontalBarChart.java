@@ -38,7 +38,7 @@ public class HorizontalBarChart extends AChart<com.github.mikephil.charting.char
             }
         }
         if(xValues.size() == 0) {
-            mView.setData(null);
+            mView.clear();
             mView.notifyDataSetChanged();
             mView.invalidate();
             return;

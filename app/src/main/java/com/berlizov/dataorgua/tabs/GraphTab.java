@@ -40,20 +40,14 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
         }
     }
 
+    private JSONTable mTable;
     private AChart mCurrentChart = Chart.BAR.getChart();
     private ArrayAdapter<CharSequence> mHeadersAdapter;
     private int mSelectedRow, mSelectedColumn;
 
     @Override
     public void setTable(JSONTable table) {
-        for(Chart chart : Chart.values()) {
-            chart.getChart().setData(table);
-        }
-
-        for(String column : table.getHeaders()) {
-            mHeadersAdapter.add(column);
-        }
-        mHeadersAdapter.notifyDataSetChanged();
+        mTable = table;
     }
 
     @Override
@@ -99,6 +93,9 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
         Spinner chart = (Spinner) view.findViewById(R.id.chart_type);
         chart.setAdapter(chartAdapter);
         chart.setOnItemSelectedListener(this);
+
+        applyTable();
+
         return view;
     }
 
@@ -123,5 +120,16 @@ public class GraphTab extends TableReaderFragment implements AdapterView.OnItemS
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void applyTable() {
+        for(Chart chart : Chart.values()) {
+            chart.getChart().setData(mTable);
+        }
+
+        for(String column : mTable.getHeaders()) {
+            mHeadersAdapter.add(column);
+        }
+        mHeadersAdapter.notifyDataSetChanged();
     }
 }

@@ -48,11 +48,13 @@ public class PieChart extends AChart<com.github.mikephil.charting.charts.PieChar
             }
         }
         if(xValues.size() == 0) {
-            mView.setData(null);
+            mView.clear();
             mView.notifyDataSetChanged();
             mView.invalidate();
             return;
         }
+
+        mView.setDrawSliceText(false);
 
         PieDataSet dataSet = new PieDataSet(yValues, mTable.getHeader(row));
         dataSet.setSliceSpace(2f);
