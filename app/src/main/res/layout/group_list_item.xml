@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    >
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/groupImageView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/groupItemNameTextView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="1"
+        android:layout_toRightOf="@+id/groupImageView" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/groupItemCompanyTextView"
+        android:layout_below="@+id/groupItemNameTextView"
+        android:layout_toRightOf="@+id/groupImageView"
+        android:text="1" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/groupCount"
+        android:layout_below="@+id/groupItemCompanyTextView"
+        android:layout_toRightOf="@+id/groupImageView"
+        android:text="1" />
+
+
+</RelativeLayout>

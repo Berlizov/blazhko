@@ -1,6 +1,7 @@
 package com.berlizov.dataorgua.tabs;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ public class MapTab extends TableReaderFragment implements OnMapReadyCallback {
 
     @Override
     public boolean can(JSONTable table) {
-        return (table.getColumIndex("lat")>=0)||(table.getColumIndex("lon")>=0);
+        return (table.getColumIndex(getLanName())>=0)||(table.getColumIndex(getLonName())>=0);
     }
 
     @Override
@@ -59,10 +60,16 @@ public class MapTab extends TableReaderFragment implements OnMapReadyCallback {
 
     @Override
     public void applyTable(View view) {
-        altIndex = mTable.getColumIndex("lon");
-        longIndex =  mTable.getColumIndex("lat");
+        altIndex = mTable.getColumIndex(getLonName());
+        longIndex =  mTable.getColumIndex(getLanName());
         if((altIndex>=0)||(longIndex>=0)){
             startMap();
         }
+    }
+    private String getLonName(){
+        return "lon";
+    }
+    private String getLanName() {
+        return "lat";
     }
 }

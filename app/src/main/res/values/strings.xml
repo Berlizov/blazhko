@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">DataOrgUa</string>
     <string name="info_id">InfoID</string>
+    <string name="group">group</string>
     <string name="map_tab">Карта</string>
     <string name="table_tab">Таблица</string>
     <string name="graph_tab">Графика</string>
@@ -8,4 +9,14 @@
     <string name="row">Строка:</string>
     <string name="column">Столбец:</string>
     <string name="chart_type">Тип диаграммы:</string>
+
+    <string name="action_settings">Настройки</string>
+    <string name="site_uri">Адрес сайта</string>
+    <string name="site_uri_default">data.ngorg.od.ua</string>
+    <string name="longitude_name">Значение долготы</string>
+    <string name="longitude_name_default">lon</string>
+    <string name="latitude_name">Значение широты</string>
+    <string name="latitude_name_default">lat</string>
+
+    <string name="count">Количество: </string>
 </resources>

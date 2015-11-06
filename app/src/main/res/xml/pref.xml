@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <EditTextPreference
+        android:title="@string/site_uri"
+        android:key="site_uri"
+        android:defaultValue="@string/site_uri_default" />
+    <EditTextPreference
+        android:title="@string/longitude_name"
+        android:key=" longitude_name"
+        android:defaultValue="@string/longitude_name_default" />
+
+    <EditTextPreference
+        android:title="@string/latitude_name"
+        android:key="latitude_name"
+        android:defaultValue="@string/latitude_name_default" />
+</PreferenceScreen>

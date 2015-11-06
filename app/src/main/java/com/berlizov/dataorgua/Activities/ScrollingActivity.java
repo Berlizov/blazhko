@@ -2,6 +2,8 @@ package com.berlizov.dataorgua.Activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +15,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.berlizov.dataorgua.API.API;
+import com.berlizov.dataorgua.API.LoadTable;
 import com.berlizov.dataorgua.Info;
 import com.berlizov.dataorgua.JSONTable;
 import com.berlizov.dataorgua.R;
@@ -45,14 +49,16 @@ public class ScrollingActivity extends AppCompatActivity {
         GraphTab(new GraphTab());
 
         TableReaderFragment tab;
-        Tab(TableReaderFragment tab){
-            this.tab=tab;
+
+        Tab(TableReaderFragment tab) {
+            this.tab = tab;
         }
 
         public TableReaderFragment getTab() {
             return tab;
         }
     }
+
     Info mInfo;
     TextView mError;
     ViewPager mViewPager;
@@ -66,14 +72,33 @@ public class ScrollingActivity extends AppCompatActivity {
 
         setupToolbar();
         setupViewPager();
-        new CallAPI(this).execute(mInfo.ID);
+
+        new LoadTable(this).execute(mInfo.ID);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putSerializable("info",mInfo);
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("info",mInfo);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        mInfo = (Info) savedInstanceState.getSerializable("info");
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     public void loaded(JSONTable str) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        for(Tab t: Tab.values()){
-            if(t.getTab().can(str)) {
-                adapter.addFrag(t.getTab(),getString(t.getTab().getIdName()));
+        for (Tab t : Tab.values()) {
+            if (t.getTab().can(str)) {
+                adapter.addFrag(t.getTab(), getString(t.getTab().getIdName()));
                 mTabs.add(t.getTab());
                 t.getTab().setTable(str);
             }
@@ -90,10 +115,10 @@ public class ScrollingActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.INVISIBLE);
     }
 
-    private void setupToolbar(){
+    private void setupToolbar() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mInfo =(Info)extras.getSerializable(getString(R.string.info_id));
+            mInfo = (Info) extras.getSerializable(getString(R.string.info_id));
         }
         setTitle(mInfo.name);
     }
@@ -126,98 +151,14 @@ public class ScrollingActivity extends AppCompatActivity {
             return mFragmentList.size();
         }
 
-        public void addFrag(TableReaderFragment tab,String name) {
+        public void addFrag(TableReaderFragment tab, String name) {
             mFragmentList.add(tab);
             mFragmentTitleList.add(name);
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.size()-1<position?"":mFragmentTitleList.get(position);
-        }
-    }
-
-    private class CallAPI extends AsyncTask<String, String, JSONTable> {
-        ScrollingActivity parent;
-
-        public CallAPI(ScrollingActivity parent) {
-            this.parent = parent;
-        }
-
-        @Override
-        protected JSONTable doInBackground(String... params) {
-            //апи
-            String urlString="http://data.ngorg.od.ua/uk/api/action/datastore/search.json?resource_id="+params[0];
-            String result = "";
-            InputStream in = null;
-            // HTTP Get
-            // на выход получам фиговую строку json
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                in = new BufferedInputStream(urlConnection.getInputStream());
-                char[] buffer = new char[1024];
-
-                int bytesRead=0;
-                Reader reader = new BufferedReader(
-                        new InputStreamReader(in, "UTF-8"));
-                Writer writer = new StringWriter();
-                while ((bytesRead = reader.read(buffer)) != -1)
-                {
-                    writer.write(buffer, 0, bytesRead);
-                }
-                in.close();
-                result= writer.toString();
-            } catch (Exception e ) {
-                e.printStackTrace();
-            }
-
-            //Code
-            // изза криворукости этих сервисов, мы на выход получали строку с  \\u**** ,где * - цифра, вместо кириллических букв. там типо криво приброзовывали utf-8
-            // написал транслятор
-            // на выход получам норм строку json
-            StringBuilder out = new StringBuilder();
-            while (result.length() > 0) {
-                int index = result.indexOf("\\u");
-                if (index >= 0) {
-                    out.append(result.substring(0, index));
-                    String c = result.substring(index + 2, index + 6);
-                    int t0=Integer.parseInt(c, 16);
-                    out.append(Character.toString((char)t0));
-                    result = result.substring(index + 6);
-                } else {
-                    out.append(result);
-                    result = "";
-                }
-            }
-
-            //json в обьект JSONTable
-            JSONTable table = new JSONTable();
-            try {
-
-                //Если что то пошло не так то вернем null
-                if(!new JSONObject(out.toString()).getBoolean("success")){
-                    Log.e("Success",""+new JSONObject(result).getBoolean("success"));
-                    return null;
-                }
-                table.parseJson(out.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-            return table;
-        }
-
-        @Override
-        protected void onPostExecute(JSONTable s) {
-            super.onPostExecute(s);
-            // если пришел null, по показывае ошибку
-            if(s!=null) {
-                parent.loaded(s);
-            }else{
-                parent.setError();
-            }
+            return mFragmentTitleList.size() - 1 < position ? "" : mFragmentTitleList.get(position);
         }
     }
 }

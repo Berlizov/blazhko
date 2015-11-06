@@ -7,14 +7,14 @@ import java.io.Serializable;
  * типо структура про набор данных
  */
 public class Info implements Serializable {
-    // имя, Детская поликриник
     public String name;
-    //дата создания набора
     public String date;
-    // компания которая загрузила инфу
     public String company;
 
     public String ID;
+
+    public Info() {
+    }
 
     public Info( String ID, String name, String company, String date) {
         this.ID = ID;
@@ -23,4 +23,35 @@ public class Info implements Serializable {
         this.company = company;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
 }

@@ -15,15 +15,20 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <activity
-            android:name=".Activities.ScrollingActivity"
-            android:parentActivityName=".Activities.InfoSelectorActivity">
+            android:name=".Activities.ScrollingActivity">
         </activity>
-        <activity android:name=".Activities.InfoSelectorActivity">
+        <activity android:name=".Activities.InfoSelectorActivity" >
+        </activity>
+        <activity
+            android:name=".Activities.PrefActivity">
+
+        </activity>
+        <activity android:name=".Activities.GroupActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
