@@ -25,6 +25,8 @@ public class PieChart extends AChart<com.github.mikephil.charting.charts.PieChar
     public void setChartView(com.github.mikephil.charting.charts.PieChart view) {
         super.setChartView(view);
 
+        mView.setDrawCenterText(false);
+        mView.setDrawSliceText(false);
         mView.setDrawHoleEnabled(false);
         Legend l = mView.getLegend();
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
@@ -54,7 +56,6 @@ public class PieChart extends AChart<com.github.mikephil.charting.charts.PieChar
             return;
         }
 
-        mView.setDrawSliceText(false);
 
         PieDataSet dataSet = new PieDataSet(yValues, mTable.getHeader(row));
         dataSet.setSliceSpace(2f);
